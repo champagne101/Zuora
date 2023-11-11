@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import postsabi from '../../contracts/posts.json'
+import postsabi from '../../contracts/posts.json';
 
-const contractAddress = '0x36e4C7EE06DBa016D613dF6F9eeC0fD350639177'; 
-const contractABI = postsabi; 
+const contractAddress = '0x36e4C7EE06DBa016D613dF6F9eeC0fD350639177'; // 0x0a23E002358F591C928af6f0001108002aeb2611   0x36e4C7EE06DBa016D613dF6F9eeC0fD350639177
+const contractABI = postsabi;
 
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
@@ -14,12 +14,6 @@ function Posts() {
   const [posts, setPosts] = useState([]);
   const [responses, setResponses] = useState([]);
   const [selectedPost, setSelectedPost] = useState(0);
-
-  
- 
-
-
-
 
   useEffect(() => {
     // Load existing posts
@@ -84,47 +78,83 @@ function Posts() {
     loadResponses();
   };
 
+  
+
   return (
-    <div>
-      <h1>Posts</h1>
-      
+    <div className="p-1">
 
-      <div>
-      
-        <input
-          type="text"
-          className='text-black'
-          value={newCid}
-          onChange={(e) => setNewCid(e.target.value)}
-        />
-        <button onClick={createPost}>Create Post</button>
-      </div>
-      <div>
+      <div className="mb">
+
+
+      <h2 className="text-lg font-semibold mb-2">Questions</h2>
+      <div className="mb-8">
         {posts.map((post, index) => (
-          <div key={index}>
-            <p onClick={() => handlePostSelection(index)}>{post.cid}</p>
+          <div key={index} className="cursor-pointer">
+            <p
+              onClick={() => handlePostSelection(index)}
+              className={`${
+                selectedPost === index ? 'text-blue-500 underline' : ''
+              }`}
+            >
+              {post.cid}
+            </p>
           </div>
         ))}
       </div>
 
-
-      <h2>Responses</h2>
-      <div>
-        <input
-          type="text"
-          className='text-black'
-          value={newCid}
-          onChange={(e) => setNewCid(e.target.value)}
-        />
-        <button onClick={respondToPost}>Respond to Post</button>
+      <h2 className="text-lg font-semibold mb-2">Responses</h2>
+      <div className="mb-8">
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            className="border text-black border-gray-300 p-2 w-64"
+            value={newCid}
+            onChange={(e) => setNewCid(e.target.value)}
+            placeholder="Your response"
+          />
+          <button
+            onClick={respondToPost}
+            className="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Respond to Post
+          </button>
+        </div>
+        <div className="mt-4">
+          {responses.map((response, index) => (
+            <div key={index}>
+              <p className="text-green-500">{response.cid}</p>
+            </div>
+          ))}
+        </div>
       </div>
-      <div>
-        {responses.map((response, index) => (
-          <div key={index}>
-            <p>{response.cid}</p>
-          </div>
-        ))}
+        
+      <h2 className="text-lg font-semibold mb-2">Create Post</h2>
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            className="border text-black border-gray-300 p-2 w-64"
+            value={newCid}
+            onChange={(e) => setNewCid(e.target.value)}
+            placeholder="Enter your question"
+          />
+          <button
+            onClick={createPost}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Create Post
+          </button>
+        </div>
+        <div className="mt-4">
+          {posts.map((post, index) => (
+            <div key={index} className="cursor-pointer">
+              <p onClick={() => handlePostSelection(index)} className="text-blue-500 underline">
+                {post.cid}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
+      
     </div>
   );
 }
